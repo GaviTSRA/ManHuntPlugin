@@ -1,0 +1,12 @@
+name: ManHuntPlugin
+version: '${version}'
+main: gavitsra.manhuntplugin.Manhuntplugin
+api-version: 1.18
+authors: [ GaviTSRA ]
+commands:
+  compass:
+    aliases:
+      - cp
+  timer:
+    aliases:
+      - tm
