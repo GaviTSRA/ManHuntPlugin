@@ -3,6 +3,7 @@ package gavitsra.manhuntplugin;
 import gavitsra.manhuntplugin.commands.CompassCommand;
 
 import gavitsra.manhuntplugin.commands.TimerCommand;
+import gavitsra.manhuntplugin.listeners.PlayerDeathListener;
 import gavitsra.manhuntplugin.listeners.PlayerInteractListener;
 import gavitsra.manhuntplugin.tasks.CompassLocatorTask;
 import gavitsra.manhuntplugin.tasks.TimerTask;
@@ -22,6 +23,7 @@ public final class Manhuntplugin extends JavaPlugin {
         getCommand("timer").setTabCompleter(new TimerCommand(this));
 
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
 
         new CompassLocatorTask(this).runTaskTimer(this, 0, 1);
     }
