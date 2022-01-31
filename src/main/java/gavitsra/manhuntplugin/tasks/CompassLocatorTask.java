@@ -3,17 +3,17 @@ package gavitsra.manhuntplugin.tasks;
 import gavitsra.manhuntplugin.Manhuntplugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.inventory.meta.CompassMeta;
+import org.bukkit.inventory.ItemFlag;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
 
 public class CompassLocatorTask extends BukkitRunnable {
     Manhuntplugin plugin;
@@ -34,38 +34,26 @@ public class CompassLocatorTask extends BukkitRunnable {
             for (int x = 0; x < player.getInventory().getSize() - 1; x++) {
                 ItemStack item = player.getInventory().getItem(x);
 
-                if (item == null) continue;
-                if (item.getType() != Material.COMPASS) continue;
+                if (!plugin.compassLocatorManager.isValidTracker(item)) continue;
 
-                PersistentDataContainer persistentData = item.getItemMeta().getPersistentDataContainer();
+                Player searchedPlayer = plugin.compassLocatorManager.getTrackedPlayer(item);
 
-                if (!persistentData.has(trackingPlayersKey, PersistentDataType.STRING)) continue;
-                if (!persistentData.has(selectedPlayerKey, PersistentDataType.INTEGER)) continue;
-
-                String trackedPlayersData = persistentData.get(trackingPlayersKey, PersistentDataType.STRING);
-                ArrayList<String> trackedPlayers = new ArrayList<>();
-                if (trackedPlayersData.contains(",")) {
-                    Collections.addAll(trackedPlayers, trackedPlayersData.split(","));
-                }
-                else trackedPlayers.add(trackedPlayersData);
-
-                int trackedPlayerIndex = persistentData.get(selectedPlayerKey, PersistentDataType.INTEGER);
-                String playerName = trackedPlayers.get(trackedPlayerIndex);
-
-                Player searchedPlayer = null;
-                for (Player player2 : players) {
-                    if (Objects.equals(player2.getName(), playerName)) {
-                        searchedPlayer = player2;
-                    }
-                }
+		CompassMeta compassMeta = (CompassMeta) item.getItemMeta();
+		compassMeta.setLodestoneTracked(false);
 
                 if (searchedPlayer == null) {
-                    player.setCompassTarget(new Location(player.getWorld(), 0, 0, 0));
-                    final TextComponent msg = Component.text(ChatColor.RED+"At least one tracker could not find it's player");
-                    player.clearTitle();
-                    player.sendActionBar(msg);
+                    player.setCompassTarget(new Location(player.getWorld
+(), 0, 0, 0));
+		    compassMeta.setLodestone(new Location(player.getWorld(), 0, 0, 0));
                 } else {
-                    player.setCompassTarget(searchedPlayer.getLocation());
+		    if(plugin.compassLocatorManager.getTrackedPlayerDistance(player, item) != -1.0) {
+                    	player.setCompassTarget(searchedPlayer.getLocation());
+			compassMeta.setLodestone(searchedPlayer.getLocation());
+		    } else {
+			player.setCompassTarget(plugin.compassLocatorManager.getPlayerPortalLocation(player.getWorld().getName(), player, searchedPlayer));
+			compassMeta.setLodestone(plugin.compassLocatorManager.getPlayerPortalLocation(player.getWorld().getName(), player, searchedPlayer));
+		    }
+		    if(player.getWorld().getName() != "world") { item.setItemMeta(compassMeta); }
                 }
             }
         }

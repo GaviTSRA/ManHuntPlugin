@@ -3,7 +3,6 @@ package gavitsra.manhuntplugin.tasks;
 import gavitsra.manhuntplugin.Manhuntplugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -37,9 +36,12 @@ public class TimerTask extends BukkitRunnable {
 
         final TextComponent msg = Component.text(ChatColor.GREEN + "" + hours + ":" + minutes + ":" + secs);
 
-        for (Player player : players) {
-            player.sendActionBar(msg);
-        }
+        //for (Player player : players) {
+          //  player.sendActionBar(msg);
+//        }
+	for (var entry : plugin.playerMessagesTasks.entrySet()) {
+	    entry.getValue().timer = ChatColor.GREEN + "" + hours + ":" + minutes + ":" + secs;
+	}
     }
 
     public void pause() {

@@ -96,6 +96,10 @@ public class TimerCommand implements TabExecutor {
                     player.sendMessage(msg);
                 }
 
+		for (var entry : plugin.playerMessagesTasks.entrySet()) {
+	 	    entry.getValue().timer = "";
+		}
+
                 plugin.timerRunning = false;
                 plugin.timerPaused = false;
                 return true;

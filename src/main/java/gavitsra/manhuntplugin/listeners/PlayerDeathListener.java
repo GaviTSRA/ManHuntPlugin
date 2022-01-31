@@ -12,8 +12,8 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
 
-        for (int x = 0; x < 100; x++) { 
-	    player.getWorld().spawnParticle(Particle.FLAME, player.getLocation(), x, 0, x, 0, 0.1);
+        for (int i = 0; i < 100; i++) {
+	    player.getWorld().spawnParticle(Particle.FLAME, player.getLocation(), 20, 0, i, 0, 0.1);
         }
     }
 }
