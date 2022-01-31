@@ -19,6 +19,7 @@ public final class Manhuntplugin extends JavaPlugin {
         // Plugin startup logic
         getCommand("compass").setExecutor(new CompassCommand(this));
         getCommand("timer").setExecutor(new TimerCommand(this));
+        getCommand("timer").setTabCompleter(new TimerCommand(this));
 
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
 

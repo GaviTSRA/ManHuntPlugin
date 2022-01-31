@@ -6,12 +6,16 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class TimerCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TimerCommand implements TabExecutor {
     Manhuntplugin plugin;
 
     public TimerCommand(Manhuntplugin plugin) {
@@ -41,7 +45,7 @@ public class TimerCommand implements CommandExecutor {
                 else if (plugin.timerPaused)  {
                     plugin.timer.unpause();
                     if (sender instanceof Player player) {
-                        TextComponent msg = Component.text(ChatColor.GREEN + "The timer has been unpaused!");
+                        TextComponent msg = Component.text(ChatColor.GREEN + "The timer has been un-paused!");
                         player.sendMessage(msg);
                     }
                 }
@@ -104,5 +108,18 @@ public class TimerCommand implements CommandExecutor {
                 return false;
             }
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            List<String> arguments = new ArrayList<>();
+            arguments.add("start");
+            arguments.add("pause");
+            arguments.add("reset");
+            return arguments;
+        }
+
+        return null;
     }
 }
