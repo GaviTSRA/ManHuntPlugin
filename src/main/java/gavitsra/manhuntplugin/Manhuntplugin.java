@@ -10,6 +10,7 @@ import gavitsra.manhuntplugin.tasks.ActionBarMessageTask;
 import gavitsra.manhuntplugin.tasks.CompassLocatorTask;
 import gavitsra.manhuntplugin.tasks.TimerTask;
 import gavitsra.manhuntplugin.util.CompassLocatorManager;
+import gavitsra.manhuntplugin.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,6 +40,9 @@ public final class Manhuntplugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerTeleportListener(this), this);
 
         new CompassLocatorTask(this).runTaskTimer(this, 0, 20);
+
+	int pluginId = 14196;
+        Metrics metrics = new Metrics(this, pluginId);
     }
 
     @Override
